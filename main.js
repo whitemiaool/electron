@@ -1,4 +1,4 @@
-const {app, BrowserWindow,Menu} = require('electron')
+const {app, BrowserWindow,Menu,Tray} = require('electron')
 const path = require('path')
 const url = require('url')
 
@@ -17,19 +17,29 @@ var template = [
     //   }
     // ]
   }]
+
 var menu = Menu.buildFromTemplate(template)
 Menu.setApplicationMenu(menu);
 
-function createWindow () {
-  // 创建浏览器窗口。
-  win = new BrowserWindow({width: 1500, height: 900})
 
-  // 加载应用的 index.html。
-  // win.loadURL(url.format({
-  //   pathname: path.join(__dirname, 'index.html'),
-  //   protocol: 'file:',
-  //   slashes: true
-  // }))
+
+
+function createWindow () {
+  const iconName = process.platform === 'win32' ? 'train.png' : 'train.png'
+  const iconPath = path.join(__dirname, iconName)
+  appIcon = new Tray(iconPath)
+  
+  const contextMenu = Menu.buildFromTemplate([{
+    label: '退出',
+    click: function () {
+      // event.sender.send('tray-removed')
+      app.quit()
+    }
+  }])
+  appIcon.setToolTip('服务系统')
+  appIcon.setContextMenu(contextMenu)
+  // 创建浏览器窗口。
+  win = new BrowserWindow({width: 1500, height: 900});
 
   win.loadURL('http://localhost:3000')
 
