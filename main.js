@@ -16,6 +16,21 @@ var template = [
     //     role: 'undo'
     //   }
     // ]
+  },{
+    label: '刷新',
+    click: function (item, focusedWindow) {
+      if (focusedWindow) {
+        // 重载之后, 刷新并关闭所有的次要窗体
+        if (focusedWindow.id === 1) {
+          BrowserWindow.getAllWindows().forEach(function (win) {
+            if (win.id > 1) {
+              win.close()
+            }
+          })
+        }
+        focusedWindow.reload()
+      }
+    }
   }]
 
 var menu = Menu.buildFromTemplate(template)
@@ -32,10 +47,9 @@ function createWindow () {
   const contextMenu = Menu.buildFromTemplate([{
     label: '退出',
     click: function () {
-      // event.sender.send('tray-removed')
       app.quit()
     }
-  }])
+  },])
   appIcon.setToolTip('服务系统')
   appIcon.setContextMenu(contextMenu)
   // 创建浏览器窗口。
